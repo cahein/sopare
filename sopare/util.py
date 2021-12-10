@@ -31,8 +31,8 @@ from sopare.path import __wavedestination__
 
 class util:
 
-    def __init__(self, debug, peak_factor):
-        self.debug = debug
+    def __init__(self, cfg, peak_factor):
+        self.cfg = cfg
         self.characteristic = sopare.characteristics.characteristic(peak_factor)
         self.cache = { }
 
@@ -135,7 +135,7 @@ class util:
     @staticmethod
     def writeDICT(json_data):
         with open("dict/dict.json", 'w') as json_file:
-            json.dump(json_data, json_file)
+            json.dump(json_data, json_file, cls=sopare.numpyjsonencoder.numpyjsonencoder)
         json_file.close()
 
     @staticmethod
