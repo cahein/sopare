@@ -154,7 +154,13 @@ def show_dict_analysis(debug):
     analysis = utilities.compile_analysis(utilities.getDICT())
     for id in analysis:
         print (id)
-        for k, v in analysis[id].iteritems():
+        
+        if (hasattr(analysis[id], 'iteritems')):
+            termSpecs = analysis[id].iteritems()
+        else:
+            termSpecs = analysis[id].items()
+            
+        for k, v in termSpecs:
             print (' ' + str(k) + ' ' + str(v))
 
 def unit_tests(debug, cfg):
