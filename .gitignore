@@ -6,8 +6,11 @@
 *.wav
 *.png
 error.log
-plugins/*
 config/*
 
 /tokens
 /samples
+
+plugins/recorder/config.json
+*~
+*#
