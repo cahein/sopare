@@ -44,7 +44,7 @@ eca = ecasound_handler.EcasoundHandler()
 
 def handleTerm(term):
     if not isRecording():
-        if term == 'stop' or term == 'abspielen':
+        if term == 'stop':
             return
 
     if term == 'aufnehmen':
@@ -78,6 +78,7 @@ def playLastRecording():
 
 def playSound(soundfile):
     length = eca.play_sound(soundfile)
+    print('go to sleep ' + str(length))
     time.sleep(length)
 
 
