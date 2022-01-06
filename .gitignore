@@ -6,8 +6,8 @@
 *.wav
 *.png
 error.log
-config/*
-
+config/*.ini
+dict/dict.json
 /tokens
 /samples
 

@@ -31,7 +31,8 @@ if config['path_for_event_sounds']:
 
 
 if (not os.path.exists(path_for_event_sounds)):
-    print('ERROR: The path to store the sounds to be played as feedback to the user must be configured.')
+    print('ERROR: The path to store the sounds to be played as feedback '
+          + ' to the user must be configured.')
 if (not os.path.exists(path_for_recordings)):
     print('ERROR: The path to store the recording files must be configured.')
 
