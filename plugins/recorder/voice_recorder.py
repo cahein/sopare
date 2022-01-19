@@ -44,17 +44,13 @@ eca = ecasound_handler.EcasoundHandler()
 
 
 def handleTerm(term):
-    if not isRecording():
-        if term == 'stop':
-            return
-
     if term == 'aufnehmen':
         if eca.get_engine_status() == 'not started':
             playTermSound('aufnehmen')
             startRecording()
-    elif term == 'stop':
-        stopRecording()
-        playTermSound('stop')
+        else:
+            stopRecording()
+            playTermSound('stop')
     elif term == 'abspielen':
         if isRecording():
             print('still recording')
