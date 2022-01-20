@@ -23,7 +23,7 @@ class log():
 
     def __init__(self, debug, error, cfg = None):
         if (error == True):
-            logging.basicConfig(filename='error.log', filemode='a', loglevel='ERROR')
+            logging.basicConfig(filename='error.log', filemode='a', level='ERROR')
         else:
             logging.basicConfig()
         self.logger = logging.getLogger()
