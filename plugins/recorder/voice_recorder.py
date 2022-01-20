@@ -75,9 +75,9 @@ def playLastRecording():
 
 def playSound(soundfile):
     length = eca.play_sound(soundfile)
-    print('go to sleep ' + str(length))
-    time.sleep(length)
-
+    if length:
+        print('go to sleep ' + str(length))
+        time.sleep(length)
 
 def startRecording():
     filename = getRecordingFilename()

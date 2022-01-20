@@ -23,10 +23,10 @@ class EcasoundHandler:
         self.ecaiam.command('ai-add ' + soundfile)
 
         self.ecaiam.command('cs-connect')
+        self.ecaiam.command('start')
+
         self.ecaiam.command('cs-get-length')
         length = self.ecaiam.last_float()
-
-        self.ecaiam.command('start')
 
         while 1:
             time.sleep(1)
