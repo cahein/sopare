@@ -21,14 +21,16 @@ def get_path_from_spec(path_spec):
     return path
 
 
-if config['path_for_recordings']:
-    path_spec_for_recordings = config['path_for_recordings']
-    path_for_recordings = get_path_from_spec(path_spec_for_recordings)
-
 if config['path_for_event_sounds']:
     path_spec_for_event_sounds = config['path_for_event_sounds']
     path_for_event_sounds = get_path_from_spec(path_spec_for_event_sounds)
 
+if config['path_for_recordings_default']:
+    path_for_recordings = config['path_for_recordings_default']
+    if (not os.path.exists(path_for_recordings)):
+        if config['path_for_recordings_fallback']:
+            path_spec_for_recordings = config['path_for_recordings_fallback']
+            path_for_recordings = get_path_from_spec(path_spec_for_recordings)
 
 if (not os.path.exists(path_for_event_sounds)):
     print('ERROR: The path to store the sounds to be played as feedback '
