@@ -26,20 +26,20 @@ if config['path_for_event_sounds']:
     path_for_event_sounds = get_path_from_spec(path_spec_for_event_sounds)
 
 if config['path_for_recordings_default']:
-    path_for_recordings = config['path_for_recordings_default']
-    if (not os.path.exists(path_for_recordings)):
-        if config['path_for_recordings_fallback']:
-            path_spec_for_recordings = config['path_for_recordings_fallback']
-            path_for_recordings = get_path_from_spec(path_spec_for_recordings)
+    path_for_recordings_default = config['path_for_recordings_default']
+if config['path_for_recordings_fallback']:
+    path_spec_for_recordings = config['path_for_recordings_fallback']
+    path_for_recordings_fallback = get_path_from_spec(path_spec_for_recordings)
 
 if (not os.path.exists(path_for_event_sounds)):
     print('ERROR: The path to store the sounds to be played as feedback '
           + ' to the user must be configured.')
-if (not os.path.exists(path_for_recordings)):
+if (not os.path.exists(path_for_recordings_fallback)):
     print('ERROR: The path to store the recording files must be configured.')
 
-print('Path for recordings: ' + path_for_recordings)
 print('Path for event sounds: ' + path_for_event_sounds)
+print('Default path for recordings: ' + path_for_recordings_default)
+print('Fallback path for recordings: ' + path_for_recordings_fallback)
 
 
 eca = ecasound_handler.EcasoundHandler()
@@ -47,12 +47,12 @@ eca = ecasound_handler.EcasoundHandler()
 
 def handleTerm(term):
     if term == 'aufnehmen':
-        if eca.get_engine_status() == 'not started':
-            playTermSound('aufnehmen')
-            startRecording()
-        else:
+        if (eca.get_engine_status() == 'running'):
             stopRecording()
             playTermSound('stop')
+        else:
+            playTermSound('aufnehmen')
+            startRecording()
     elif term == 'abspielen':
         if isRecording():
             print('still recording')
@@ -76,10 +76,10 @@ def playLastRecording():
 
 
 def playSound(soundfile):
-    length = eca.play_sound(soundfile)
-    if length:
-        print('go to sleep ' + str(length))
-        time.sleep(length)
+    sound_length = eca.play_sound(soundfile)
+    if (sound_length and sound_length > 10):
+        print('going to sleep: ' + str(sound_length))
+        time.sleep(sound_length)
 
 def startRecording():
     filename = getRecordingFilename()
@@ -103,6 +103,7 @@ def isRecording():
 def getLastRecording():
     latestDate = -1
     latestTime = -1
+    path_for_recordings = getRecordingsPath()
 
     for recordedFile in glob.glob(path_for_recordings + "/recording.*.wav"):
         match = re.match(r'.*\/recording\.(\d+)-(\d+)\.wav', recordedFile)
@@ -126,4 +127,12 @@ def getLastRecording():
 def getRecordingFilename():
     dt = datetime.now()
     dtString = dt.strftime('%Y%m%d-%H%M%S')
+    path_for_recordings = getRecordingsPath()
+
     return path_for_recordings + "/recording." + dtString + ".wav"
+
+def getRecordingsPath():
+    if (os.path.exists(path_for_recordings_default)):
+        return path_for_recordings_default
+    else:
+        return path_for_recordings_fallback
