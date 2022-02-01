@@ -1,0 +1,12 @@
+{
+    "log_level": "DEBUG",
+    "path_for_recordings_default": "/mnt/ext/recordings",
+    "path_for_recordings_fallback": {
+        "type": "relative",
+        "path": "recordings"
+    },
+    "path_for_event_sounds": {
+        "type": "relative",
+        "path": "sounds"
+    }
+}
