@@ -5,12 +5,12 @@
 *.raw
 *.wav
 *.png
-error.log
-dict/dict.json
+*.log
 config/*.ini
 !config/default.ini
 /tokens
 /samples
+/dict/dict.json
 
 plugins/recorder/config.json
 *~

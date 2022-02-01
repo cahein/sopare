@@ -5,6 +5,7 @@ import time
 from datetime import datetime
 import json
 import ecasound_handler
+import logging
 
 basefolder = os.path.dirname(os.path.realpath(__file__))
 
@@ -19,6 +20,23 @@ def get_path_from_spec(path_spec):
     else:
         path = path_spec['path']
     return path
+
+
+logLevel = 'DEBUG'
+if config['log_level']:
+    logLevel = config['log_level']
+
+fh = logging.FileHandler('recorder.log')
+formatter = logging.Formatter(
+    '%(asctime)s %(levelname)s %(name)s: %(message)s'
+)
+fh.setFormatter(formatter)
+
+logger = logging.getLogger(__name__)
+logger.addHandler(fh)
+logger.setLevel(logLevel)
+
+eca = ecasound_handler.EcasoundHandler(logLevel)
 
 
 if config['path_for_event_sounds']:
@@ -42,10 +60,8 @@ print('Default path for recordings: ' + path_for_recordings_default)
 print('Fallback path for recordings: ' + path_for_recordings_fallback)
 
 
-eca = ecasound_handler.EcasoundHandler()
-
-
 def handleTerm(term):
+    logger.debug('Term recognized: ' + term)
     if term == 'aufnehmen':
         if (eca.get_engine_status() == 'running'):
             stopRecording()
@@ -55,7 +71,7 @@ def handleTerm(term):
             startRecording()
     elif term == 'abspielen':
         if isRecording():
-            print('still recording')
+            logger.debug('still recording')
         else:
             playLastRecording()
 
@@ -76,18 +92,22 @@ def playLastRecording():
 
 
 def playSound(soundfile):
+    logger.info('play ' + soundfile)
     sound_length = eca.play_sound(soundfile)
     if (sound_length and sound_length > 10):
-        print('going to sleep: ' + str(sound_length))
+        logger.debug('going to sleep: ' + str(sound_length))
         time.sleep(sound_length)
+
 
 def startRecording():
     filename = getRecordingFilename()
+    logger.info('start recording ' + filename)
     eca.start_recording(filename)
 
 
 def stopRecording():
     if isRecording():
+        logger.info('stop recording')
         eca.stop_recording()
 
 
@@ -130,6 +150,7 @@ def getRecordingFilename():
     path_for_recordings = getRecordingsPath()
 
     return path_for_recordings + "/recording." + dtString + ".wav"
+
 
 def getRecordingsPath():
     if (os.path.exists(path_for_recordings_default)):
