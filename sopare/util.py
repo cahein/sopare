@@ -135,14 +135,22 @@ class util:
     @staticmethod
     def writeDICT(json_data):
         with open("dict/dict.json", 'w') as json_file:
-            json.dump(json_data, json_file, cls=sopare.numpyjsonencoder.numpyjsonencoder)
+            json.dump(json_data, json_file,
+                      cls=sopare.numpyjsonencoder.numpyjsonencoder)
         json_file.close()
 
     @staticmethod
     def getDICT(filename="dict/dict.json"):
-        with open(filename) as json_file:
-            json_data = json.load(json_file)
-        json_file.close()
+        if os.path.isfile(filename):
+            with open(filename) as json_file:
+                json_data = json.load(json_file)
+                json_file.close()
+        else:
+            json_data = { "dict": [] }
+            with open("dict/dict.json", 'w') as json_file:
+                json.dump(json_data, json_file)
+                json_file.close()
+                
         return json_data
 
     def getCompiledDict(self):
