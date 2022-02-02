@@ -17,7 +17,7 @@ class EcasoundHandler:
 
         logger.info('Initialize Ecasound Control Interface')
         self.logger = logger
-        self.ecaiam = pyeca.ECA_CONTROL_INTERFACE()
+        self.ecaiam = pyeca.ECA_CONTROL_INTERFACE(0)
         self.ecaiam.command('cs-add play-chainsetup')
         self.ecaiam.command('c-add play-chain')
         self.ecaiam.command('ao-add alsa')
@@ -40,13 +40,18 @@ class EcasoundHandler:
 
         connect_error = self.ecaiam.command('cs-connect')
         if connect_error:
-            self.logger.error('chainsetup connection error: ' + str(connect_error))
+            self.logger.error('chainsetup connection error: '
+                              + str(connect_error))
             return
-        self.ecaiam.command('start')
 
         self.ecaiam.command('cs-get-length')
         length = self.ecaiam.last_float()
         self.logger.debug('length of sound: ' + str(length))
+        if length > 100:
+            start_position = length - 60
+            self.ecaiam.command('cs-set-position ' + str(start_position))
+
+        self.ecaiam.command('start')
 
         while 1:
             time.sleep(1)
@@ -58,7 +63,7 @@ class EcasoundHandler:
                 self.ecaiam.command('cs-disconnect')
                 self.logger.info('chainset disconnected')
                 return length
-        
+
     def start_recording(self, filename):
         self.ecaiam.command('cs-select record-chainsetup')
         self.ecaiam.command('c-select record-chain')
@@ -69,15 +74,16 @@ class EcasoundHandler:
 
         connect_error = self.ecaiam.command('cs-connect')
         if connect_error:
-            self.logger.error('chainsetup connection error: ' + str(connect_error))
+            self.logger.error('chainsetup connection error: '
+                              + str(connect_error))
             return
         self.ecaiam.command('start')
 
     def stop_recording(self):
-        self.logger.info('stop recording')
         self.ecaiam.command('stop')
         self.ecaiam.command('ao-remove')
         self.ecaiam.command('cs-disconnect')
+        self.logger.info('chainsetup stopped and disconnected')
 
     def get_engine_status(self):
         self.ecaiam.command('engine-status')
