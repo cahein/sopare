@@ -88,15 +88,26 @@ def playTermSound(term):
 def playLastRecording():
     last_recording = getLastRecording()
     if last_recording != '':
-        playSound(last_recording)
+        if (not playSound(last_recording)):
+            playSound(path_for_event_sounds + '/abspielen-fehler.wav')
+            time.sleep(5)
 
 
 def playSound(soundfile):
     logger.info('play ' + soundfile)
+    started = time.perf_counter()
     sound_length = eca.play_sound(soundfile)
+    ended = time.perf_counter()
+
     if (sound_length and sound_length > 10):
-        logger.debug('going to sleep: ' + str(sound_length))
-        time.sleep(sound_length)
+        running = ended - started
+        if sound_length > running:
+            sleep_time = sound_length - running + 1
+            logger.debug('going to sleep: ' + str(sleep_time))
+            time.sleep(sleep_time)
+    else:
+        return False
+    return True
 
 
 def startRecording():

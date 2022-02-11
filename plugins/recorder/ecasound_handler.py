@@ -21,6 +21,7 @@ class EcasoundHandler:
         self.ecaiam.command('cs-add play-chainsetup')
         self.ecaiam.command('c-add play-chain')
         self.ecaiam.command('ao-add alsa')
+        self.ecaiam.command('cs-set-audio-format 16,2,44100')
 
         self.ecaiam.command('cs-add record-chainsetup')
         self.ecaiam.command('c-add record-chain')
@@ -40,9 +41,10 @@ class EcasoundHandler:
 
         connect_error = self.ecaiam.command('cs-connect')
         if connect_error:
-            self.logger.error('chainsetup connection error: '
+            self.logger.error('playback - chainsetup connection error: '
                               + str(connect_error))
-            return
+            self.ecaiam.command('ai-remove')
+            return False
 
         self.ecaiam.command('cs-get-length')
         length = self.ecaiam.last_float()
@@ -74,7 +76,7 @@ class EcasoundHandler:
 
         connect_error = self.ecaiam.command('cs-connect')
         if connect_error:
-            self.logger.error('chainsetup connection error: '
+            self.logger.error('recording - chainsetup connection error: '
                               + str(connect_error))
             return
         self.ecaiam.command('start')
