@@ -4,6 +4,7 @@
 *.pyo
 *.raw
 *.wav
+!plugins/recorder/sounds/*.wav
 *.png
 *.log
 config/*.ini
