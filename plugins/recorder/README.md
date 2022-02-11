@@ -30,6 +30,6 @@ To start SoPaRe on boot, the following sopare.service specification may be used.
 
 ## Misc
 
-Copy all relevant files to some folder for deployment.
+Copy all relevant code files to some folder for deployment.
 
-rsync -avz --exclude '*~' --exclude '#*' --exclude '.git' --exclude '*.pyc' --exclude 'dict' --exclude '__pycache__' --dry-run /path/to/dev/sopare hostname:/path/to/sopare/
+rsync -avz --exclude '*~' --exclude '#*' --exclude '.git' --exclude '.gitignore' --exclude '*.pyc' --exclude 'dict' --exclude 'samples' --exclude 'tokens' --exclude 'config' --exclude '__pycache__' --dry-run /path/to/dev/sopare hostname:/path/to/sopare/
